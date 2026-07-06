@@ -32,9 +32,12 @@ const Products = () => {
   const [category, setCategory] = useState("All");
 
   const filteredProducts = products.filter((item) => {
-    const searchMatch = item.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const searchText = search.trim().toLowerCase();
+
+    const searchMatch =
+      searchText === "" ||
+      item.name.toLowerCase().includes(searchText) ||
+      item.category.toLowerCase().includes(searchText);
 
     const categoryMatch =
       category === "All" || item.category === category;
@@ -121,18 +124,18 @@ const Products = () => {
         </motion.div>
 
         {/* Product Grid */}
-
         <motion.div
+          key={category + search}
           variants={container}
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+          animate="show"
           className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10"
         >
+
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <motion.div
-                key={product.id}
+                key={`${category}-${product.id}`}
                 variants={card}
                 whileHover={{
                   y: -10,
